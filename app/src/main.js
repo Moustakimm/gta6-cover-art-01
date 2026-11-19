@@ -1,8 +1,9 @@
 // Cover Bay: wires the poster editor. Three photo slots, a layout, a colour
-// grade and a caption become a multi-panel cover on the preview canvas;
-// Export draws the same cover at full post size (1080x1080, 1080x1350 or
-// 1920x1080) and downloads it as a PNG. A `?shot=` query sets up a fixed
-// scene for a screenshot instead (./shots.js).
+// grade, per-panel caption chips, badges and stickers, and a caption become a
+// multi-panel cover on the preview canvas; Export draws the same cover at
+// full post size (1080x1080, 1080x1350 or 1920x1080) and downloads it as a
+// PNG. A `?shot=` query sets up a fixed scene for a screenshot instead
+// (./shots.js).
 import { drawCover, panelRects } from './cover.js';
 import { runShot } from './shots.js';
 
@@ -14,17 +15,31 @@ const SIZES = { square: [1080, 1080], portrait: [1080, 1350], wide: [1920, 1080]
 const state = {
   layout: 'poster',
   grade: 'sunset',
-  titleStyle: 'block',
+  titleStyle: 'sunset',
   title: 'Neon Bay',
   subtitle: 'One last score',
   sizeKey: 'wide',
+  captions: [
+    'Neon Bay — 2:47 AM · one last score',
+    'The Pier — midnight · meet me there',
+    'Boulevard — golden hour · no way back',
+  ],
+  badges: { stickers: true, seal: true, wanted: true },
   photos: [null, null, null],
   panels: [
-    { photo: 0, zoom: 1.15, panX: 0, panY: 0, flip: false },
-    { photo: 1, zoom: 1.15, panX: 0, panY: 0, flip: false },
-    { photo: 0, zoom: 1.15, panX: 0, panY: 0, flip: false },
+    { photo: 0, zoom: 1.05, panX: 0, panY: 0, flip: false, anchor: 'top' },
+    { photo: 1, zoom: 1.15, panX: 0, panY: 0, flip: false, anchor: 'top' },
+    { photo: 0, zoom: 1.15, panX: 0, panY: 0, flip: false, anchor: 'top' },
   ],
   selectedPanel: 0,
+};
+
+/** One-click looks: layout + grade + lettering that go together. */
+const PRESETS = {
+  'Sunset classic': { layout: 'poster', grade: 'sunset', titleStyle: 'sunset' },
+  'Neon night': { layout: 'trio', grade: 'neon', titleStyle: 'neon' },
+  'Midnight heist': { layout: 'duo', grade: 'midnight', titleStyle: 'block' },
+  'Palm getaway': { layout: 'mosaic', grade: 'palm', titleStyle: 'sunset' },
 };
 
 function panelCount() {
@@ -51,9 +66,25 @@ function syncPanelControls() {
   $('zoomOut').textContent = `${Math.round(panel.zoom * 100)}%`;
   $('panXOut').textContent = `${panel.panX}`;
   $('panYOut').textContent = `${panel.panY}`;
+  $('faceSafe').checked = panel.anchor === 'top';
   document.querySelectorAll('.panel-pick').forEach((b) => {
     b.classList.toggle('active', Number(b.dataset.panel) === state.selectedPanel);
   });
+}
+
+/** Applies a preset look and mirrors it back into the controls. */
+function applyPreset(name) {
+  const p = PRESETS[name];
+  if (!p) return;
+  state.layout = p.layout;
+  state.grade = p.grade;
+  state.titleStyle = p.titleStyle;
+  state.selectedPanel = 0;
+  document.querySelector(`input[name="layout"][value="${p.layout}"]`).checked = true;
+  $('grade').value = p.grade;
+  $('titleStyle').value = p.titleStyle;
+  status.textContent = `Preset applied: ${name}.`;
+  redraw();
 }
 
 /** Loads an image from a URL, resolving to the image once it can be drawn. */
@@ -99,6 +130,24 @@ $('size').addEventListener('change', (e) => { state.sizeKey = e.target.value; re
 $('title').addEventListener('input', (e) => { state.title = e.target.value; redraw(); });
 $('subtitle').addEventListener('input', (e) => { state.subtitle = e.target.value; redraw(); });
 
+// Look presets.
+document.querySelectorAll('.preset').forEach((b) => {
+  b.addEventListener('click', () => applyPreset(b.dataset.preset));
+});
+
+// Per-panel caption chips: "PLACE — time · hook".
+[0, 1, 2].forEach((i) => {
+  $(`caption${i + 1}`).addEventListener('input', (e) => {
+    state.captions[i] = e.target.value;
+    redraw();
+  });
+});
+
+// Badges and stickers toggles.
+$('badgeStickers').addEventListener('change', (e) => { state.badges.stickers = e.target.checked; redraw(); });
+$('badgeSeal').addEventListener('change', (e) => { state.badges.seal = e.target.checked; redraw(); });
+$('badgeWanted').addEventListener('change', (e) => { state.badges.wanted = e.target.checked; redraw(); });
+
 // Per-panel editing: click a panel on the preview, or use the picker buttons.
 document.querySelectorAll('.panel-pick').forEach((b) => {
   b.addEventListener('click', () => { state.selectedPanel = Number(b.dataset.panel); syncPanelControls(); });
@@ -121,6 +170,16 @@ $('panY').addEventListener('input', (e) => { state.panels[state.selectedPanel].p
 $('flip').addEventListener('click', () => {
   const panel = state.panels[state.selectedPanel];
   panel.flip = !panel.flip;
+  redraw();
+});
+$('faceSafe').addEventListener('change', (e) => {
+  state.panels[state.selectedPanel].anchor = e.target.checked ? 'top' : 'center';
+  redraw();
+});
+$('resetPanel').addEventListener('click', () => {
+  const i = state.selectedPanel;
+  state.panels[i] = { photo: i === 1 ? 1 : 0, zoom: i === 0 ? 1.05 : 1.15, panX: 0, panY: 0, flip: false, anchor: 'top' };
+  status.textContent = `Panel ${i + 1} reset to its default crop.`;
   redraw();
 });
 

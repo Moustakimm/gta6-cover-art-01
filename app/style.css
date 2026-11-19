@@ -7,7 +7,10 @@ fieldset { border: 1px solid #4a3560; border-radius: 10px; padding: 12px; displa
 legend { font-weight: 800; color: #ff8fb3; padding: 0 6px; }
 label { display: flex; flex-direction: column; gap: 5px; font-weight: 600; font-size: 13px; }
 label:has(input[type=radio]) { flex-direction: row; align-items: center; font-weight: 500; }
-.radios { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.radios { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.presets { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.preset { background: #2c1e42; }
+label.check { flex-direction: row; align-items: center; font-weight: 500; }
 input[type=text], select { font: inherit; padding: 8px; border: 1px solid #6b5583; border-radius: 6px; background: #241a33; color: #fff; }
 input[type=range] { width: 100%; accent-color: #ff5e8a; }
 button { font: inherit; font-weight: 700; padding: 10px; border: 0; border-radius: 8px; background: #3d2b52; color: #fff; cursor: pointer; }
