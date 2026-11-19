@@ -1,0 +1,27 @@
+html, body { margin: 0; min-height: 100%; background: #17101f; color: #f5eefc; font: 15px/1.45 system-ui, sans-serif; }
+.app { display: flex; gap: 24px; padding: 20px; box-sizing: border-box; align-items: flex-start; }
+.controls { width: 320px; flex: none; display: flex; flex-direction: column; gap: 14px; max-height: calc(100vh - 40px); overflow-y: auto; padding-right: 4px; }
+.controls h1 { margin: 0; font-size: 32px; letter-spacing: 0.04em; color: #ffd166; text-transform: uppercase; }
+.tag { margin: 0; color: #c9b8d8; }
+fieldset { border: 1px solid #4a3560; border-radius: 10px; padding: 12px; display: flex; flex-direction: column; gap: 10px; margin: 0; }
+legend { font-weight: 800; color: #ff8fb3; padding: 0 6px; }
+label { display: flex; flex-direction: column; gap: 5px; font-weight: 600; font-size: 13px; }
+label:has(input[type=radio]) { flex-direction: row; align-items: center; font-weight: 500; }
+.radios { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+input[type=text], select { font: inherit; padding: 8px; border: 1px solid #6b5583; border-radius: 6px; background: #241a33; color: #fff; }
+input[type=range] { width: 100%; accent-color: #ff5e8a; }
+button { font: inherit; font-weight: 700; padding: 10px; border: 0; border-radius: 8px; background: #3d2b52; color: #fff; cursor: pointer; }
+button.primary { background: #ff5e8a; font-size: 17px; }
+button:hover { filter: brightness(1.15); }
+.panel-picks { display: flex; gap: 6px; }
+.panel-pick { flex: 1; padding: 7px; }
+.panel-pick.active { background: #ffd166; color: #17101f; }
+.hint { margin: 0; color: #a793b8; font-size: 13px; }
+.slot-name { color: #a793b8; font-size: 12px; margin-top: -6px; }
+#status { margin: 0; color: #8ef0c1; min-height: 1.2em; }
+.preview { flex: 1; min-width: 0; display: flex; justify-content: center; position: sticky; top: 20px; }
+#cover { width: 100%; max-width: 1100px; height: auto; box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55); cursor: pointer; }
+body.shot-cover .controls { display: none; }
+body.shot-cover .app { padding: 0; }
+body.shot-cover .preview { position: static; }
+body.shot-cover #cover { width: 100vw; height: 100vh; max-width: none; object-fit: fill; box-shadow: none; cursor: default; }

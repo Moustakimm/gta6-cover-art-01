@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cover Bay — GTA-style poster cover maker</title>
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<main class="app">
+  <section class="controls" aria-label="Cover controls">
+    <h1>Cover Bay</h1>
+    <p class="tag">Turn your photo and a caption into a multi-panel poster cover, then export it as a PNG.</p>
+
+    <fieldset>
+      <legend>1 · Photos</legend>
+      <button id="loadSamples" type="button">Use the sample photos</button>
+      <label>Photo 1 <input id="photo1" type="file" accept="image/*"></label>
+      <span id="slot1Name" class="slot-name">empty</span>
+      <label>Photo 2 <input id="photo2" type="file" accept="image/*"></label>
+      <span id="slot2Name" class="slot-name">empty</span>
+      <label>Photo 3 <input id="photo3" type="file" accept="image/*"></label>
+      <span id="slot3Name" class="slot-name">empty</span>
+      <p class="hint">Photos stay on your machine — nothing is uploaded.</p>
+    </fieldset>
+
+    <fieldset>
+      <legend>2 · Layout &amp; grade</legend>
+      <div class="radios" role="group" aria-label="Layout">
+        <label><input type="radio" name="layout" value="poster" checked> Poster</label>
+        <label><input type="radio" name="layout" value="trio"> Trio</label>
+        <label><input type="radio" name="layout" value="duo"> Duo</label>
+        <label><input type="radio" name="layout" value="single"> Single</label>
+      </div>
+      <label>Colour grade
+        <select id="grade">
+          <option value="sunset" selected>Sunset</option>
+          <option value="neon">Neon</option>
+          <option value="midnight">Midnight</option>
+          <option value="palm">Palm</option>
+        </select>
+      </label>
+      <label>Lettering
+        <select id="titleStyle">
+          <option value="block" selected>Block</option>
+          <option value="neon">Neon glow</option>
+          <option value="sunset">Sunset gradient</option>
+        </select>
+      </label>
+    </fieldset>
+
+    <fieldset>
+      <legend>3 · Caption</legend>
+      <label>Title <input id="title" type="text" maxlength="30" value="Neon Bay"></label>
+      <label>Subtitle <input id="subtitle" type="text" maxlength="40" value="One last score"></label>
+    </fieldset>
+
+    <fieldset>
+      <legend>4 · One panel at a time</legend>
+      <p class="hint">Click a panel on the preview, or pick one here.</p>
+      <div class="panel-picks">
+        <button class="panel-pick active" type="button" data-panel="0">Panel 1</button>
+        <button class="panel-pick" type="button" data-panel="1">Panel 2</button>
+        <button class="panel-pick" type="button" data-panel="2">Panel 3</button>
+      </div>
+      <p id="panelLabel" class="hint">Panel 1 of 3</p>
+      <label>Photo in this panel
+        <select id="panelPhoto">
+          <option value="0">Photo 1</option>
+          <option value="1">Photo 2</option>
+          <option value="2">Photo 3</option>
+        </select>
+      </label>
+      <label>Zoom <input id="zoom" type="range" min="1" max="2.5" step="0.05" value="1.15"> <output id="zoomOut">115%</output></label>
+      <label>Move sideways <input id="panX" type="range" min="-50" max="50" step="1" value="0"> <output id="panXOut">0</output></label>
+      <label>Move up / down <input id="panY" type="range" min="-50" max="50" step="1" value="0"> <output id="panYOut">0</output></label>
+      <button id="flip" type="button">Flip this panel</button>
+    </fieldset>
+
+    <fieldset>
+      <legend>5 · Export</legend>
+      <label>Post size
+        <select id="size">
+          <option value="wide" selected>1920 × 1080 (wide)</option>
+          <option value="square">1080 × 1080 (square)</option>
+          <option value="portrait">1080 × 1350 (portrait)</option>
+        </select>
+      </label>
+      <button id="export" type="button" class="primary">Export PNG</button>
+      <p id="status" role="status"></p>
+    </fieldset>
+  </section>
+  <section class="preview" aria-label="Cover preview">
+    <canvas id="cover" width="1920" height="1080"></canvas>
+  </section>
+</main>
+<script type="module" src="./src/main.js"></script>
+</body>
+</html>
